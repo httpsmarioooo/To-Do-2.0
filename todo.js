@@ -60,3 +60,16 @@ btnAgregar.addEventListener('click', () => {
   guardarTareas();
   input.value = '';
 });
+
+const btnEliminarLocalStorage = document.getElementById("btnEliminarLocalStorage");
+
+btnEliminarLocalStorage.addEventListener("click", function () {
+  const confirmar = confirm("¿Estás seguro de que quieres borrar todas las tareas?");
+  
+  if (confirmar) {
+    localStorage.clear();     // borra todo del localStorage
+    lista.innerHTML = "";     // borra lo que se muestra en pantalla
+    tareas = [];              // vacía el arreglo de tareas
+    alert("Tareas borradas exitosamente.");
+  }
+});
