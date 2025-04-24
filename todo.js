@@ -1,47 +1,40 @@
-// Obtener elementos
-var input = document.getElementById("nuevaTarea");
-var btnAgregar = document.getElementById("btnAgregar");
-var lista = document.getElementById("listaTareas");
-var mensaje = document.getElementById("mensaje");
+const input = document.getElementById('nuevaTarea');
+const btnAgregar = document.getElementById('btnAgregar');
+const lista = document.getElementById('listaTareas');
+const mensaje = document.getElementById('mensaje');
 
-// Traer tareas guardadas o iniciar vacío
-var tareas = JSON.parse(localStorage.getItem("tareas")) || [];
+// Obtener tareas desde localStorage
+let tareas = JSON.parse(localStorage.getItem('tareas')) || [];
 
-// Guardar en localStorage
+// Guardar tareas en localStorage
 function guardarTareas() {
-  localStorage.setItem("tareas", JSON.stringify(tareas));
+  localStorage.setItem('tareas', JSON.stringify(tareas));
 }
 
-// Mostrar tarea en la lista
-function mostrarTarea(texto, completada) {
-  var li = document.createElement("li");
-  var span = document.createElement("span");
-  span.textContent = texto;
+// Crear y mostrar una tarea en la lista
+function crearTarea(tareaTexto, completada = false) {
+  const li = document.createElement('li');
+  const span = document.createElement('span');
+  span.textContent = tareaTexto;
+  if (completada) span.classList.add('completada');
 
-  if (completada) {
-    span.classList.add("completada");
-  }
+  const btnEliminar = document.createElement('button');
+  btnEliminar.textContent = 'Eliminar';
 
-  // Evento para marcar como completada
-  span.addEventListener("click", function () {
-    span.classList.toggle("completada");
-    for (var i = 0; i < tareas.length; i++) {
-      if (tareas[i].texto === texto) {
-        tareas[i].completada = !tareas[i].completada;
-        break;
-      }
+  // Tachado
+  span.addEventListener('click', () => {
+    span.classList.toggle('completada');
+    const index = tareas.findIndex(t => t.texto === tareaTexto);
+    if (index !== -1) {
+      tareas[index].completada = !tareas[index].completada;
+      guardarTareas();
     }
-    guardarTareas();
   });
 
-  // Botón eliminar
-  var btnEliminar = document.createElement("button");
-  btnEliminar.textContent = "Eliminar";
-  btnEliminar.addEventListener("click", function () {
+  // Eliminar
+  btnEliminar.addEventListener('click', () => {
     lista.removeChild(li);
-    tareas = tareas.filter(function (t) {
-      return t.texto !== texto;
-    });
+    tareas = tareas.filter(t => t.texto !== tareaTexto);
     guardarTareas();
   });
 
@@ -50,26 +43,20 @@ function mostrarTarea(texto, completada) {
   lista.appendChild(li);
 }
 
-// Mostrar todas las tareas guardadas
-for (var i = 0; i < tareas.length; i++) {
-  mostrarTarea(tareas[i].texto, tareas[i].completada);
-}
+// Cargar tareas guardadas
+tareas.forEach(texto => crearTarea(texto.texto, texto.completada));
 
-// Cuando el usuario da click en "Agregar"
-btnAgregar.addEventListener("click", function () {
-  var textoTarea = input.value.trim();
-
-  if (textoTarea === "") {
-    mensaje.textContent = "Debes escribir una tarea.";
+// Agregar nueva tarea
+btnAgregar.addEventListener('click', () => {
+  const texto = input.value.trim();
+  if (texto === '') {
+    mensaje.textContent = 'Debes escribir una tarea.';
     return;
   }
 
-  mensaje.textContent = "";
-
-  mostrarTarea(textoTarea, false);
-
-  tareas.push({ texto: textoTarea, completada: false });
+  mensaje.textContent = '';
+  crearTarea(texto);
+  tareas.push({ texto: texto, completada: false });
   guardarTareas();
-
-  input.value = "";
+  input.value = '';
 });
