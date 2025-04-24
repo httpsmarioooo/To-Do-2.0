@@ -1,0 +1,27 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+#mensaje {
+  color: red;
+  margin-top: 10px;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  padding: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.completada {
+  text-decoration: line-through;
+  background-color: #e0ffe0;
+}
+button {
+  margin-left: 10px;
+}
